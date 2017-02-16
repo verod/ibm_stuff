@@ -1,0 +1,84 @@
+from impala.dbapi import connect
+conn = connect(host='ukpoc5x017', port=10000,timeout=None, use_ssl=False, ca_cert=None, user='vera', password=None, kerberos_service_name='hive', auth_mechanism='GSSAPI')
+
+
+
+
+sudo pip install thrift==0.9.3
+sudo pip install thrift_sasl
+sudo pip list  | grep thrift
+  
+  
+  also install impyla
+
+from impala.dbapi import connect
+conn = connect(host='ukpoc5x017', port=10000,timeout=None, use_ssl=False, ca_cert=None, user='vera', password=None, kerberos_service_name='hive', auth_mechanism='GSSAPI')
+
+veronica-macbook:impyla-master vera$ sudo pip list  | grep thrift
+thrift (0.9.3)
+veronica-macbook:impyla-master vera$ sudo pip list  | grep thrift_sasl
+veronica-macbook:impyla-master vera$ sudo pip install thrift_sasl
+Downloading/unpacking thrift-sasl
+  Downloading thrift_sasl-0.2.1.tar.gz
+  Running setup.py (path:/private/tmp/pip_build_root/thrift-sasl/setup.py) egg_info for package thrift-sasl
+
+Requirement already satisfied (use --upgrade to upgrade): sasl>=0.2.1 in /Library/Python/2.7/site-packages (from thrift-sasl)
+Requirement already satisfied (use --upgrade to upgrade): thrift in /Library/Python/2.7/site-packages (from thrift-sasl)
+Requirement already satisfied (use --upgrade to upgrade): six in /System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python (from sasl>=0.2.1->thrift-sasl)
+Installing collected packages: thrift-sasl
+  Running setup.py install for thrift-sasl
+
+Successfully installed thrift-sasl
+Cleaning up...
+veronica-macbook:impyla-master vera$ sudo pip list  | grep thrift
+thrift (0.9.3)
+thrift-sasl (0.2.1)
+veronica-macbook:impyla-master vera$ python
+Python 2.7.10 (default, Jul 30 2016, 19:40:32)
+[GCC 4.2.1 Compatible Apple LLVM 8.0.0 (clang-800.0.34)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from impala.dbapi import connect
+>>> conn = connect(host='ukpoc5x017', port=10000,timeout=None, use_ssl=False, ca_cert=None, user='vera', password=None, kerberos_service_name='hive', auth_mechanism='GSSAPI')
+>>>
+>>> cursor = conn.cursor()
+>>> cursor.execute('select * from test')
+>>> print cursor.description
+[('test.c1', 'INT', None, None, None, None, None), ('test.c2', 'STRING', None, None, None, None, None)]
+>>> results = cursor.fetchall()
+>>> print results
+[(1, 'aaa')]
+>>>
+
+
+
+
+---------------------------------------
+Pyhs2
+--------------------
+con = pyhs2.connect(host='ukpoc5x017', port=10000,authMechanism="KERBEROS", user='vera@veronica.com', password='', database='default', configuration={"krb_host": "ukpoc5x008.veronica.com", "krb_service": "hive"})
+      
+      
+error:
+/System/Library/Frameworks/Python.framework/Versions/2.7/bin/python2.7 /Users/vera/Downloads/pyhs2-master/test
+Traceback (most recent call last):
+  File "/Users/vera/Downloads/pyhs2-master/test", line 5, in <module>
+    configuration={"krb_host": "ukpoc5x008.veronica.com", "krb_service": "hive"})
+  File "/Users/vera/Downloads/pyhs2-master/pyhs2/__init__.py", line 7, in connect
+    return Connection(*args, **kwargs)
+  File "/Users/vera/Downloads/pyhs2-master/pyhs2/connections.py", line 46, in __init__
+    transport.open()
+  File "/Users/vera/Downloads/pyhs2-master/pyhs2/cloudera/thrift_sasl.py", line 66, in open
+    message=("Could not start SASL: %s" % self.sasl.getError()))
+thrift.transport.TTransport.TTransportException: Could not start SASL: Error in sasl_client_start (-1) SASL(-1): generic failure: GSSAPI Error:  Miscellaneous failure (see text (Error from KDC: LOOKING_UP_SERVER while looking up 'hive/ukpoc5x008.veronica.com@VERONICA.COM' (cached result, timeout in 1200 sec))
+
+Process finished with exit code 1
+
+
+I believe Kerberos support is not fully implemented. It seems to look for a principal hive/krb_host@VERONICA.COM 
+but only 
+kadmin:  getprincs hive*
+hive/ukpoc5x017.veronica.com@VERONICA.COM
+hive/ukpoc5x018.veronica.com@VERONICA.COM
+exist (where hive is installed).
+
+                   

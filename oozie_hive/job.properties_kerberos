@@ -1,0 +1,6 @@
+nameNode=hdfs://ukpoc5x016:8020
+jobTracker=ukpoc5x015:8050
+jdbcURL=jdbc:hive2://ukpoc5x017.veronica.com:10000/default
+jdbcPrincipal=hive/_HOST@VERONICA.COM
+hivescript=${nameNode}/tmp/ambari-qa/script.sql
+oozie.use.system.libpath=true

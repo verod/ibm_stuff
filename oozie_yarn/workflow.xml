@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="oozieshell-Workflow">
+   <start to="shell1" />
+   <action name="shell1">
+<shell xmlns="uri:oozie:shell-action:0.1">         
+         <job-tracker>${jobTracker}</job-tracker>
+         <name-node>${nameNode}</name-node>
+	<prepare>
+		<delete path="/tmp/ambari-qa/yarntest/10gsort/input"/>
+		<delete path="/tmp/ambari-qa/yarntest/10gsort/output"/>
+	</prepare>
+	 <exec>tera_test.sh</exec>
+	 <env-var>HADOOP_USER_NAME=${wf:user()}</env-var>
+	 <file>/tmp/ambari-qa/tera_test.sh</file>
+</shell>
+      <ok to="end" />
+      <error to="kill_job" />
+   </action>
+   <kill name="kill_job">
+      <message>Job failed lalalalla</message>
+   </kill>
+   <end name="end" />
+</workflow-app>

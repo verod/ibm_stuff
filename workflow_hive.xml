@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="simple-Workflow">
+   <start to="Create_External_Table" />
+   <action name="Create_External_Table">
+<hive2 xmlns="uri:oozie:hive2-action:0.1">         
+         <job-tracker>${jobTracker}</job-tracker>
+         <name-node>${nameNode}</name-node>
+         <job-xml>/tmp/ambari-qa/hive-site.xml</job-xml>
+         <jdbc-url>jdbc:hive2://vm24x52:10000/default</jdbc-url>
+         <password>ambari-password</password>
+         <script>/tmp/ambari-qa/script.sql</script>
+      </hive2>
+      <ok to="end" />
+      <error to="kill_job" />
+   </action>
+   <kill name="kill_job">
+      <message>Job failed</message>
+   </kill>
+   <end name="end" />
+</workflow-app>

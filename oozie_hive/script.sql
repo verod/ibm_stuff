@@ -1,0 +1,6 @@
+CREATE DATABASE ambariqatest;
+USE ambariqatest;
+DROP TABLE IF EXISTS ooziehive;
+CREATE EXTERNAL TABLE ooziehive (u INT, t int) 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' 
+STORED AS TEXTFILE LOCATION '/tmp/ambari-qa/ooziehive';

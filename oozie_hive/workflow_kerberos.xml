@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="simple-Workflow">
+<global>
+    <job-tracker>${jobTracker}</job-tracker>
+    <name-node>${nameNode}</name-node>
+</global>
+ <credentials>
+    <credential name="hs2-creds" type="hive2">
+      <property>
+        <name>hive2.server.principal</name>
+        <value>${jdbcPrincipal}</value>
+      </property>
+      <property>
+       <name>hive2.jdbc.url</name>
+         <value>${jdbcURL}</value>
+      </property>
+    </credential>
+  </credentials>
+  
+   <start to="Create_External_Table" />
+   <action name="Create_External_Table" cred="hs2-creds">
+   <hive2 xmlns="uri:oozie:hive2-action:0.1">         
+     <jdbc-url>${jdbcURL}</jdbc-url>
+        <script>${hivescript}</script>        
+      </hive2>
+      <ok to="end" />
+      <error to="kill_job" />
+   </action>
+   <kill name="kill_job">
+      <message>Job failed</message>
+   </kill>
+   <end name="end" />
+</workflow-app>

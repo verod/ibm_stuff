@@ -1,0 +1,35 @@
+Pre-req:
+-------------
+Copy to hdfs under /tmp/ambari-qa/ the following files:
+	workflow.xml
+	tera_test.sh
+Edit job.properties to match your environment.
+-------------
+
+Key setting in workflow.xml: <env-var>HADOOP_USER_NAME=${wf:user()}</env-var>
+
+
+-------------------
+Run this test with:
+-------------------
+oozie job --oozie http://vm24x52.barry.com:11000/oozie \
+-config /home/ambari-qa/job.properties  \
+-Doozie.wf.application.path=hdfs://vm24x50:/tmp/ambari-qa/workflow.xml -run
+
+---------------------
+Check job progress at: https://vm24x50.barry.com:8443/gateway/oozieui/oozie/
+---------------------
+
+Expected result:
+------------------
+In HDFS:
+
+[ambari-qa@vm24x50 oozie_yarn]$ hdfs dfs -ls -R /tmp/ambari-qa/yarntest/10gsort
+drwxr-xr-x   - ambari-qa hdfs          0 2017-02-15 07:10 /tmp/ambari-qa/yarntest/10gsort/input
+-rw-r--r--   2 ambari-qa hdfs          0 2017-02-15 07:10 /tmp/ambari-qa/yarntest/10gsort/input/_SUCCESS
+-rw-r--r--   2 ambari-qa hdfs     500000 2017-02-15 07:10 /tmp/ambari-qa/yarntest/10gsort/input/part-m-00000
+-rw-r--r--   2 ambari-qa hdfs     500000 2017-02-15 07:10 /tmp/ambari-qa/yarntest/10gsort/input/part-m-00001
+drwxr-xr-x   - ambari-qa hdfs          0 2017-02-15 07:10 /tmp/ambari-qa/yarntest/10gsort/output
+-rw-r--r--   1 ambari-qa hdfs          0 2017-02-15 07:10 /tmp/ambari-qa/yarntest/10gsort/output/_SUCCESS
+-rw-r--r--  10 ambari-qa hdfs          0 2017-02-15 07:10 /tmp/ambari-qa/yarntest/10gsort/output/_partition.lst
+-rw-r--r--   1 ambari-qa hdfs    1000000 2017-02-15 07:10 /tmp/ambari-qa/yarntest/10gsort/output/part-r-00000
